@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online compiler</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="topNav">
+        <div class="user">
+            <div class="dropdown1">
+                <ul>
+                    <li><a href="">profile</a></li>
+                    <li><a href="">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="share">
+            <div class="dropdown2">
+                <ul>
+                    <li>User1<span><img height="15px" src="/static/close.png" alt=""></span></li>
+                    <li>User2<span><img height="15px" src="/static/close.png" alt=""></span></li>
+                    <li>User2<span><img height="15px" src="/static/close.png" alt=""></span></li>
+                    <li>User2<span><img height="15px" src="/static/close.png" alt=""></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="compilerControls">
+            <div class="play"><img src="/static/run.png" alt=""> Run</div>
+            <div class="currentFile">myfile.py</div>
+        </div>
+    </div>
+    <div class="wrap1">
+
+        <!--Workspace, manages files-->
+
+        <div class="sideNav">
+            <div class="newFF">
+                <img height="20[x" src="/static/new-folder.png" alt="" title="New Folder" onclick="askForName('folder')">
+                <img src="/static/new_file.png" alt="" title="New File" onclick="askForName('file')">
+            </div>
+            <div class="ffName">
+                <div class="close" onclick="closeoverlay()"></div>
+                <input type="text" id="nameee">
+                <button onclick="create()">Create</button>
+            </div>
+            <div style="background-color: rgba(35, 195, 190, 0.356); width: 200px; padding: 10px; border-radius: 5px;"><span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt=""></span> 
+                python
+                <span>
+                    <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt=""  onclick="viewFiles(1)">
+                    <div class="newFF" style="float: right;">
+                        <img height="20[x" src="/static/new-folder.png" alt="" title="New Folder" onclick="askForName('folder',1)">
+                        <img src="/static/new_file.png" alt="" title="New File" onclick="askForName('file',1)">
+                    </div>
+                </span>
+                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder1">
+                    <li class="file"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>
+                        myfile.cpp
+                    </li>
+                </ul>
+            </div>
+            <div style="background-color: rgba(35, 195, 190, 0.356); width: 200px; padding: 10px; border-radius: 5px; margin-top: 5px;"><span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt="" id="fid1"></span> 
+                C++
+                <span onclick="viewFiles(2)">
+                    <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt="">
+                </span>
+                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder2">
+                    <li class="file"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>myfile.py</li>
+                </ul>
+            </div>
+            <p class="file"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>fdg</p>
+        </div> 
+        
+        <!--Workspace, manages files Ends-->
+
+
+        <div class="wrap2">
+            <div class="editor"><textarea spellcheck="false" name="" id="" cols="30" rows="10"></textarea></div>
+            <div class="terminal">dfg</div>
+        </div>
+    </div>
+
+    <script>
+        folder = false;
+        file = false;
+        let fileEditing = "xyz";
+        let parent = 0;
+        const viewFiles = (fNo) => {
+            const folder1 = document.getElementById('folder' + fNo);
+            if(folder1.style.display === 'none'){
+                folder1.style.display = 'block';
+            }else{
+                folder1.style.display = 'none';
+            }
+        }
+        const closeoverlay = () => {
+            document.getElementsByClassName("ffName")[0].style.display = 'none';
+        }
+        const askForName = (types,id) => {
+            parent = id;
+            if(types === 'folder'){
+                folder = true;
+                file = false;
+            }else{
+                folder = false;
+                file = true;
+            }
+            document.getElementsByClassName("ffName")[0].style.display = 'flex';
+        }  
+        
+        const create = () => {
+            const name = document.getElementById('nameee').value;
+            document.getElementById('nameee').value = "";
+            let folderNo = 4;
+            if(folder){
+                const folder1 = document.createElement('div');
+                folder1.style.backgroundColor = 'rgba(35, 195, 190, 0.356)';
+                folder1.style.width = '200px';
+                folder1.style.padding = '10px';
+                folder1.style.borderRadius = '5px';
+                folder1.style.marginTop = '5px';
+                folder1.innerHTML = `<span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt=""></span> ${name}
+                <span onclick="viewFiles(${folderNo})">
+                    <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt="">
+                </span>
+                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder${folderNo}">
+                </ul>`;
+                document.getElementsByClassName("sideNav")[0].appendChild(folder1);
+                folderNo++;
+                folder = false;
+            }
+
+            if(file){
+                const file1 = document.createElement('p');
+                file1.className = 'file';
+                file1.innerHTML = `<span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>${name}`;
+                document.getElementsByClassName("sideNav")[0].appendChild(file1);
+                file = false;
+            }
+            
+            document.getElementsByClassName("ffName")[0].style.display = 'none';
+        }
+    </script>
+</body>
+</html>
