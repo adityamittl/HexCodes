@@ -48,8 +48,9 @@
         </div>
 
         <!-- Access management section ends -->
-
-
+        <div class="workspace_description" style="float: left; color:white; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; margin-top: 10px; margin-left: 40px; font-size: 18px;">
+            {{ workspace.name }}
+        </div>
         <!-- Section for compiler controllers -->
 
         <div class="compilerControls">
@@ -58,7 +59,8 @@
             <div class="play"><img src="/static/upload.png" height="18px" alt="" onclick="askUpload()">
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input type="file" id="inputtingFile">
+                    <input type="text" style="display: none;" id="fileId" name="fileId">
+                    <input type="file" id="inputtingFile" name="code">
                     <button id="uploadbutton">Upload</button>
                 </form>
             </div>
@@ -144,7 +146,7 @@
             <!-- Section to display and write code ends -->
 
             <!--Section to display output-->
-            <div class="terminal">dfg</div>
+            <div class="terminal">Output Window</div>
             <!--Section to display output Ends-->
 
 
@@ -171,7 +173,7 @@
         folder = false;
         file = false;
 
-        let fileEditing = ["xyz",0];  // information about file being editing
+        let fileEditing = ["",-1];  // information about file being editing
 
         let parent = -1;  // id of the parent folder if the file are being created for the child.
 
@@ -306,6 +308,11 @@
         // Function to fetch the file
 
         const  askUpload = () => {
+            if(fileEditing[1] == -1){
+                alert("No file selected");
+                return
+            }
+            document.getElementById('fileId').setAttribute('value',fileEditing[1]);
             document.getElementById("inputtingFile").click();
             document.getElementById("uploadbutton").style.display = 'block';
         }
@@ -336,6 +343,19 @@
             }
         }
 
+        // Function to show output of the code
+        const showOutput = (result) => {
+            let terminal = document.getElementsByClassName('terminal')[0];
+            output = result['result'].replaceAll('\n','<br>');
+            terminal.innerHTML = `
+            ${output}
+            <br>
+            -------------------
+            Exit Code : ${result['exit_code']}
+            <br>
+            Error: ${result['error']}
+            `;
+        }
         // Function to save and execute the file
         const submitCode = () => {
             const xhr = new XMLHttpRequest();
@@ -344,9 +364,14 @@
             xhr.send(JSON.stringify({content: editor.getValue(),name: fileEditing[0],id: fileEditing[1]}));
 
             xhr.onload = () => {
-                console.log(xhr.responseText);
+                if(xhr.status != 200){
+                    alert("Error occured, can't save and execute the file");
+                }
+                result = xhr.responseText;
+                showOutput(JSON.parse(result)['output']);
             }
         }
+
     </script>
 </body>
 </html>

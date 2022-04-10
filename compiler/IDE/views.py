@@ -1,10 +1,17 @@
-from django.shortcuts import redirect, render 
-from django.http import  JsonResponse
+import subprocess
+import os
 import json
+from django.shortcuts import redirect, render 
+from django.http import  HttpResponse, JsonResponse,HttpResponse
 from fileManage.models import Folder,File,workspace
-
 from django.utils import timezone
+from django.core.files.storage import FileSystemStorage
+from .ocr import ocr_core
 
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dir = str(os.getcwd()).replace('\\','/')
+print(dir)
 
 # Code for workspace Encryption
 from cryptography.fernet import Fernet
@@ -20,14 +27,97 @@ def decrypt(message):
     decrypted_message = f.decrypt(message)
     return decrypted_message
 
+languages = {"c": "c", "cpp": "cpp", "java": "java", "py": "python", "js": "javascript"}
+
+# Compiling function
+def compile(code,lang):
+    if lang == 'python':
+        file = open('code.py','w')
+        file.write(code)
+        file.close()
+        output = subprocess.run(['python', 'code.py'],capture_output=True)
+        exit_code = output.returncode
+        error = output.stderr
+        result = output.stdout
+    elif lang == 'cpp':
+        file = open('code.cpp','w')
+        file.write(code)
+        file.close()
+        output = subprocess.run(['g++',dir+'/code.cpp', '-o', 'output'], input=code.encode(), capture_output=True)
+        print(output)
+        output = subprocess.run(dir+'/output', input=code.encode(), capture_output=True)
+        exit_code = output.returncode
+        error = output.stderr
+        result = output.stdout
+    elif lang == 'c':
+        file = open('code.c','w')
+        file.write(code)
+        file.close()
+        output = subprocess.run(['gcc',dir+'/code.c', '-o', 'output'], input=code.encode(), capture_output=True)
+        output = subprocess.run(dir+'/output', input=code.encode(), capture_output=True)
+        exit_code = output.returncode
+        error = output.stderr
+        result = output.stdout
+    elif lang == 'java':
+        file = open('code.java','w')
+        file.write(code)
+        file.close()
+        output = subprocess.run(['javac',dir+'/code.java'], input=code.encode(), capture_output=True)
+        output = subprocess.run(['java', 'code'], input=code.encode(), capture_output=True)
+        exit_code = output.returncode
+        error = output.stderr
+        result = output.stdout
+    elif lang == 'javascript':
+        file = open('code.js','w')
+        file.write(code)
+        file.close()
+        output = subprocess.run(['node', 'code.js'], input=code.encode(), capture_output=True)
+        exit_code = output.returncode
+        error = output.stderr
+        result = output.stdout
+    else:
+        exit_code = 0
+        error = ''
+        result = ''
+    data = {
+        'code' : code,
+        'exit_code': str(exit_code),
+        'error': error.decode("utf-8") ,
+        'result': str(result.decode("utf-8") )
+    }
+    return data
+
 
 
 def home(request,id):
+    if request.method == 'POST':
+        codeFile = request.FILES['code']
+        fileId =request.POST.get('fileId')
+        file = File.objects.get(id=fileId)
+        fs = FileSystemStorage(location='media/')
+        filename = fs.save(codeFile.name, codeFile)
+        print(filename)
+        code = ocr_core(os.path.join(BASE_DIR, 'media/')+filename)
+        file.description = code
+        file.save()
+        result = compile(code,file.filt_type)
+        os.remove(dir+'/media/'+filename)
+
     ws = workspace.objects.get(id=decrypt(id))
-    folders = Folder.objects.filter(workspace=ws)
-    files = File.objects.filter(workspace=ws)
-    return render(request, 'index.html', {'folders':folders,'files':files})
-    # return render(request,"index.html")
+    if request.user != ws.owner:
+        if request.user in ws.permissions.all():
+            folders = Folder.objects.filter(workspace=ws)
+            files = File.objects.filter(workspace=ws)
+            return render(request, 'index.html', {'folders':folders,'files':files, 'workspace':ws})
+    
+    if request.user == ws.owner:
+        folders = Folder.objects.filter(workspace=ws)
+        files = File.objects.filter(workspace=ws)
+        return render(request, 'index.html', {'folders':folders,'files':files, 'workspace':ws})
+    
+    return HttpResponse('You are not authorized to view this workspace')
+
+
 
 def newFolder(request):
     if request.method == 'POST':
@@ -55,7 +145,7 @@ def newFile(request):
         ws.updated_at = timezone.now()
         ws.save(0)
         try:
-            extension = pFolder.split('.')[1]
+            extension = languages[pFolder.split('.')[1].lower()]
         except:
             extension = ''
         if pFolder == -1:
@@ -103,7 +193,13 @@ def submitCode(request):
         file = File.objects.get(id=fileId)
         file.description = code
         file.save()
-        return JsonResponse({'status':'success'})
+        code = file.description
+        result = compile(code,file.filt_type)
+        print(result)
+        return JsonResponse({"output": result})
+    
+
+        
 
 
 def workspaces(request):

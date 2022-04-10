@@ -59,6 +59,7 @@ body{
     background-color: #242a39;
     box-sizing: border-box;
     padding: 30px;
+    color: rgb(222, 222, 60);
 }
 .file{
     cursor: pointer;
