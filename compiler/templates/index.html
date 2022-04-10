@@ -67,7 +67,7 @@
                 </span>
                 <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 14px; display: none;"  id="folder{{i.id}}">
                     {% for j in i.files.all %}
-                    <li class="file"><span style="float: left; margin-right: 5px;" id="{{j.id}}"><img src="/static/file.png" height="15px" alt=""></span>
+                    <li class="file" onclick="fetchFile({{  }})"><span style="float: left; margin-right: 5px;" id="{{j.id}}"><img src="/static/file.png" height="15px" alt=""></span>
                         {{j.name}}
                     </li>
                     {% endfor %}
@@ -107,11 +107,11 @@
         let workspace = 1;
         // Ajax code for functioning 
         
-        async function createFolder(name,url){
+        async function createFolder(name,url,parent=-1){
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/'+url);
             xhr.setRequestHeader('X-CSRFToken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
-            xhr.send(JSON.stringify({name: name, workspace: workspace}));
+            xhr.send(JSON.stringify({name: name, workspace: workspace,parent: parent}));
             xhr.onload = () => {
                 const FID = JSON.parse(xhr.responseText)['id'];
                 console.log(FID);
@@ -153,7 +153,7 @@
                 createFolder(name,'createFolder');
             }
             if (file) {
-                createFolder(name,'createFile');
+                createFolder(name,'createFile',parent);
                 console.log(fileNo);
             }
             
