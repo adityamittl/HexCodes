@@ -18,3 +18,21 @@ def newFolder(request):
         folder = Folder.objects.create(name=folderName,workspace = ws)
         print(folder.id)
         return JsonResponse({'id':folder.id})
+
+
+def newFile(request):
+    if request.method == 'POST':
+        fileName = request.body.decode('utf-8')
+        fileName = json.loads(fileName)
+        print(fileName)
+        y = fileName['name']
+        x = fileName['parent']
+        try:
+            extension = x.split('.')[1]
+        except:
+            extension = ''
+        file = File.objects.create(name=y,filt_type = extension)
+        folder = Folder.objects.get(id=x)
+        folder.files.add(file)
+        folder.save()
+        return JsonResponse({'id':file.id})
