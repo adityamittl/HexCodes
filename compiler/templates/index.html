@@ -5,18 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online compiler</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.min.js" integrity="sha512-hDyKEpCc9jPn3u2VffFjScCtNqZI+BAbThAhhDYqqqZbxMqmTSNIgdU0OU9BRD/8wFxHIWLAo561hh9fW7j6sA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style id="ace-dracula">
+        .ace-dracula .ace_gutter {background: #282a36;color: rgb(144,145,148)}.ace-dracula .ace_print-margin {width: 1px;background: #44475a}.ace-dracula {background-color: #282a36;color: #f8f8f2}.ace-dracula .ace_cursor {color: #f8f8f0}.ace-dracula .ace_marker-layer .ace_selection {background: #44475a}.ace-dracula.ace_multiselect .ace_selection.ace_start {box-shadow: 0 0 3px 0px #282a36;border-radius: 2px}.ace-dracula .ace_marker-layer .ace_step {background: rgb(198, 219, 174)}.ace-dracula .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid #a29709}.ace-dracula .ace_marker-layer .ace_active-line {background: #44475a}.ace-dracula .ace_gutter-active-line {background-color: #44475a}.ace-dracula .ace_marker-layer .ace_selected-word {box-shadow: 0px 0px 0px 1px #a29709;border-radius: 3px;}.ace-dracula .ace_fold {background-color: #50fa7b;border-color: #f8f8f2}.ace-dracula .ace_keyword {color: #ff79c6}.ace-dracula .ace_constant.ace_language {color: #bd93f9}.ace-dracula .ace_constant.ace_numeric {color: #bd93f9}.ace-dracula .ace_constant.ace_character {color: #bd93f9}.ace-dracula .ace_constant.ace_character.ace_escape {color: #ff79c6}.ace-dracula .ace_constant.ace_other {color: #bd93f9}.ace-dracula .ace_support.ace_function {color: #8be9fd}.ace-dracula .ace_support.ace_constant {color: #6be5fd}.ace-dracula .ace_support.ace_class {font-style: italic;color: #66d9ef}.ace-dracula .ace_support.ace_type {font-style: italic;color: #66d9ef}.ace-dracula .ace_storage {color: #ff79c6}.ace-dracula .ace_storage.ace_type {font-style: italic;color: #8be9fd}.ace-dracula .ace_invalid {color: #F8F8F0;background-color: #ff79c6}.ace-dracula .ace_invalid.ace_deprecated {color: #F8F8F0;background-color: #bd93f9}.ace-dracula .ace_string {color: #f1fa8c}.ace-dracula .ace_comment {color: #6272a4}.ace-dracula .ace_variable {color: #50fa7b}.ace-dracula .ace_variable.ace_parameter {font-style: italic;color: #ffb86c}.ace-dracula .ace_entity.ace_other.ace_attribute-name {color: #50fa7b}.ace-dracula .ace_entity.ace_name.ace_function {color: #50fa7b}.ace-dracula .ace_entity.ace_name.ace_tag {color: #ff79c6}.ace-dracula .ace_invisible {color: #626680;}.ace-dracula .ace_indent-guide {background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y}
+    </style>
+
+    <style id="ace-chaos">
+        .ace-chaos .ace_gutter {background: #141414;color: #595959;border-right: 1px solid #282828;}.ace-chaos .ace_gutter-cell.ace_warning {background-image: none;background: #FC0;border-left: none;padding-left: 0;color: #000;}.ace-chaos .ace_gutter-cell.ace_error {background-position: -6px center;background-image: none;background: #F10;border-left: none;padding-left: 0;color: #000;}.ace-chaos .ace_print-margin {border-left: 1px solid #555;right: 0;background: #1D1D1D;}.ace-chaos {background-color: #161616;color: #E6E1DC;}.ace-chaos .ace_cursor {border-left: 2px solid #FFFFFF;}.ace-chaos .ace_cursor.ace_overwrite {border-left: 0px;border-bottom: 1px solid #FFFFFF;}.ace-chaos .ace_marker-layer .ace_selection {background: #494836;}.ace-chaos .ace_marker-layer .ace_step {background: rgb(198, 219, 174);}.ace-chaos .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid #FCE94F;}.ace-chaos .ace_marker-layer .ace_active-line {background: #333;}.ace-chaos .ace_gutter-active-line {background-color: #222;}.ace-chaos .ace_invisible {color: #404040;}.ace-chaos .ace_keyword {color:#00698F;}.ace-chaos .ace_keyword.ace_operator {color:#FF308F;}.ace-chaos .ace_constant {color:#1EDAFB;}.ace-chaos .ace_constant.ace_language {color:#FDC251;}.ace-chaos .ace_constant.ace_library {color:#8DFF0A;}.ace-chaos .ace_constant.ace_numeric {color:#58C554;}.ace-chaos .ace_invalid {color:#FFFFFF;background-color:#990000;}.ace-chaos .ace_invalid.ace_deprecated {color:#FFFFFF;background-color:#990000;}.ace-chaos .ace_support {color: #999;}.ace-chaos .ace_support.ace_function {color:#00AEEF;}.ace-chaos .ace_function {color:#00AEEF;}.ace-chaos .ace_string {color:#58C554;}.ace-chaos .ace_comment {color:#555;font-style:italic;padding-bottom: 0px;}.ace-chaos .ace_variable {color:#997744;}.ace-chaos .ace_meta.ace_tag {color:#BE53E6;}.ace-chaos .ace_entity.ace_other.ace_attribute-name {color:#FFFF89;}.ace-chaos .ace_markup.ace_underline {text-decoration: underline;}.ace-chaos .ace_fold-widget {text-align: center;}.ace-chaos .ace_fold-widget:hover {color: #777;}.ace-chaos .ace_fold-widget.ace_start,.ace-chaos .ace_fold-widget.ace_end,.ace-chaos .ace_fold-widget.ace_closed{background: none !important;border: none;box-shadow: none;}.ace-chaos .ace_fold-widget.ace_start:after {content: '▾'}.ace-chaos .ace_fold-widget.ace_end:after {content: '▴'}.ace-chaos .ace_fold-widget.ace_closed:after {content: '‣'}.ace-chaos .ace_indent-guide {border-right:1px dotted #333;margin-right:-1px;}.ace-chaos .ace_fold { background: #222; border-radius: 3px; color: #7AF; border: none; }.ace-chaos .ace_fold:hover {background: #CCC; color: #000;}
+    </style>
 </head>
 <body>
     <div class="topNav">
+
+        <!-- section for user profile and logout dropdown -->
+
         <div class="user">
             <div class="dropdown1">
                 <ul>
-                    <li><a href="">profile</a></li>
+                    <li style="height: 30px;"><a href="">profile</a></li>
                     <li><a href="">Logout</a></li>
                 </ul>
             </div>
         </div>
+
+        <!-- User profile and logout dropdown section ends -->
+
+
+
+        <!-- Section for access management -->
+
         <div class="share">
             <div class="dropdown2">
                 <ul>
@@ -28,98 +47,160 @@
             </div>
         </div>
 
-        <div class="compilerControls" style="padding-right: 60px; width: 500px;">
-            <div class="currentFile" style="margin-left: 20px;">myfile.py</div>
-            <div class="play" style="display: flex; margin-left: 50px;"><img src="/static/run.png" alt="">Record</div>
-            <div class="play" style="display: flex;"><img src="/static/upload.png" height="18px" alt="" onclick="askUpload()">
+        <!-- Access management section ends -->
+
+
+        <!-- Section for compiler controllers -->
+
+        <div class="compilerControls">
+            <div class="currentFile" style="margin-left: 20px;"></div>  <!-- current file name -->
+            <div class="play" style="margin-left: 50px;"><img src="/static/run.png" alt="">Record</div>  
+            <div class="play"><img src="/static/upload.png" height="18px" alt="" onclick="askUpload()">
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input type="file" style="display: none;" id="inputtingFile">
-                    <button id="uploadbutton" style=" display: none; padding-left: 5px; padding-right: 5px; margin-left: 8px; font-size: 13px; border-radius: 5px;">Upload</button>
+                    <input type="file" id="inputtingFile">
+                    <button id="uploadbutton">Upload</button>
                 </form>
             </div>
-            <div class="play" style="margin-left: 20px; display: flex;"><img src="/static/record.png" height="18px" alt=""> Run</div>
+            <div class="play" style="margin-left: 20px;" onclick="submitCode()"><img src="/static/record.png" height="18px" alt=""> Run</div>
         </div>
+
+        <!-- Compiler controllers section ends -->
+
     </div>
-    <div class="wrap1">
+
+
+
+    <div class="wrap1">  <!-- main container -->
 
         <!--Workspace, manages files-->
 
         <div class="sideNav">
-            <div class="newFF">
+
+            <!-- Section to create new file and folder for workspace -->
+
+            <div class="NewFileForFolder">
                 <img height="20[x" src="/static/new-folder.png" alt="" title="New Folder" onclick="askForName('folder')">
                 <img src="/static/new_file.png" alt="" title="New File" onclick="askForName('file')">
             </div>
-            <div class="ffName">
+
+            <!-- Section to create new file and folder for workspace ends -->
+
+
+
+            <!-- Modal to ask for name of file or folder -->
+
+            <div class="File_Folder_Modal">
                 <div class="close" onclick="closeoverlay()"></div>
-                <input type="text" id="nameee">
-                <button onclick="creatingFolder()">Create</button>
+                <input type="text" id="File_Folder_Name">
+                <button onclick="creating_File_Folder()">Create</button>
             </div>
+
+            <!-- Modal to ask for name of file or folder ends -->
+
+
+
+            <!-- Section to manage files and folders -->
+
             {% for i in folders %}
-            <div style="background-color: rgba(35, 195, 190, 0.356); width: 200px; padding: 10px; border-radius: 5px; margin-top: 5px;"><span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt=""></span> 
+            <div class="FolderWrap"><span><img class="ExploreMore" height="20px" src="/static/folder2.png" alt=""></span> 
                 {{i.name}}
+
                 <span>
                     <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt=""  onclick="viewFiles({{i.id}})">
-                    <div class="newFF" style="float: right;">
-                        <!-- <img height="20[x" src="/static/new-folder.png" alt="" title="New Folder" onclick="askForName('folder',1)"> -->
+                    <div class="NewFile_forFolder" style="float: right;">
                         <img src="/static/new_file.png" alt="" title="New File" onclick="askForName('file',{{i.id}})">
                     </div>
                 </span>
-                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 14px; display: none;"  id="folder{{i.id}}">
+
+                <ul  id="folder{{i.id}}">
+
                     {% for j in i.files.all %}
-                    <li class="file" onclick="fetchFile({{  }})"><span style="float: left; margin-right: 5px;" id="{{j.id}}"><img src="/static/file.png" height="15px" alt=""></span>
+                    <li class="file" onclick="fetchFile({{j.id}})"><span id="{{j.id}}"><img src="/static/file.png" height="15px" alt=""></span>
                         {{j.name}}
                     </li>
                     {% endfor %}
+
                 </ul>
+
             </div>
-            <!-- <div style="background-color: rgba(35, 195, 190, 0.356); width: 200px; padding: 10px; border-radius: 5px; margin-top: 5px;"><span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt="" id="fid1"></span> 
-                C++
-                <span onclick="viewFiles(2)">
-                    <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt="">
-                </span>
-                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder2">
-                    <li class="file"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>myfile.py</li>
-                </ul>
-            </div> -->
             {% endfor %}
+
+
             {% for i in files %}
-            <p class="file" id="{{i.id}}"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>{{i.name}}</p>
+            <p class="file" id="{{i.id}}" onclick="fetchFile({{i.id}})"><span><img src="/static/file.png" height="15px" alt=""></span>{{i.name}}</p>
             {% endfor %}
+
         </div> 
-        
+
         <!--Workspace, manages files Ends-->
 
 
+        
         <div class="wrap2">
-            <div class="editor"><textarea spellcheck="false" name="" id="" cols="30" rows="10"></textarea></div>
+            
+            <!-- Section to display and write code -->
+            <div class="editor" id="editor" style="margin-top: 40px; font-size: 13px;"></div>
+            <!-- Section to display and write code ends -->
+
+            <!--Section to display output-->
             <div class="terminal">dfg</div>
+            <!--Section to display output Ends-->
+
+
         </div>
+
+
+
     </div>
 
+    <!-- Editor script -->
+    
     <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/chaos");
+        editor.session.setMode("ace/mode/python");
+    </script>
+
+    <!-- Editor script ends -->
+
+    <script>
+
+        const syntexHighlighter = {'java': "ace/mode/java", 'py': "ace/mode/python", 'js': "ace/mode/javascript",'c': 'ace/mode/c_cpp' , 'cpp': 'ace/mode/c_cpp'} // syntax highlighter
+
         folder = false;
         file = false;
-        let fileEditing = ["xyz",0];
-        let parent = 0;
-        isparent = false;
-        let folderNo = 4;
-        let workspace = 1;
+
+        let fileEditing = ["xyz",0];  // information about file being editing
+
+        let parent = -1;  // id of the parent folder if the file are being created for the child.
+
+        isparent = false;  // if the file being created is a child of some folder
+
+        let workspace = document.URL.split('/')[4];  // workspace id
+
+
         // Ajax code for functioning 
         
-        async function createFolder(name,url,parent=-1){
+        async function create_File_Folder(name,url,parent=-1){
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/'+url);
             xhr.setRequestHeader('X-CSRFToken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
             xhr.send(JSON.stringify({name: name, workspace: workspace,parent: parent}));
+            console.log(xhr.status)
             xhr.onload = () => {
+                if(xhr.status != 200){
+                    alert("Error occured, can't create "+ name);
+                }
                 const FID = JSON.parse(xhr.responseText)['id'];
                 console.log(FID);
                 create(FID,name);
             }
-        }
 
-        // AJAX codes Enc
+        }
+        // AJAX codes End
+
+        // Function to view the child files of a folder
         const viewFiles = (fNo) => {
             const folder1 = document.getElementById('folder' + fNo);
             if(folder1.style.display === 'none'){
@@ -128,84 +209,144 @@
                 folder1.style.display = 'none';
             }
         }
+
+        // To close askName modal 
         const closeoverlay = () => {
-            document.getElementsByClassName("ffName")[0].style.display = 'none';
-            file = 0;
-            folder = 0;
+            document.getElementsByClassName("File_Folder_Modal")[0].style.display = 'none';
+            file = false;
+            folder = false;
         }
-        const askForName = (types,id=0) => {
+
+
+        // Functon to ask for name of file or folder by popping up the modals
+        const askForName = (types,id=-1) => {
+            let inputTag = document.getElementById('File_Folder_Name');
             parent = id;
-            if(id!=0){
+            if(id!=-1){
                 isparent = true;
             }
             if(types === 'folder'){
                 folder = true;
                 file = false;
+                inputTag.placeholder = 'Enter Folder Name';
             }else{
                 folder = false;
                 file = true;
+                inputTag.placeholder = 'Enter File Name';
             }
-            document.getElementsByClassName("ffName")[0].style.display = 'flex';
+            document.getElementsByClassName("File_Folder_Modal")[0].style.display = 'flex';
         }  
-        function creatingFolder(){
-            const name = document.getElementById('nameee').value;
+
+
+        // Function to create folder or file
+        function creating_File_Folder(){
+            const name = document.getElementById('File_Folder_Name').value;
             if (folder) {
-                createFolder(name,'createFolder');
+                create_File_Folder(name,'createFolder');
             }
             if (file) {
-                createFolder(name,'createFile',parent);
+                create_File_Folder(name,'createFile',parent);
                 console.log(fileNo);
             }
             
         }
+
+    
         const create = (ffno,name) => {
-            console.log("---");
-            document.getElementById('nameee').value = "";
+
+            document.getElementById('File_Folder_Name').value = "";  // to clear the input tag
+
             if(folder){
-                const folder1 = document.createElement('div');
-                folder1.style.backgroundColor = 'rgba(35, 195, 190, 0.356)';
-                folder1.style.width = '200px';
-                folder1.style.padding = '10px';
-                folder1.style.borderRadius = '5px';
-                folder1.style.marginTop = '5px';
+
+                const folder1 = document.createElement('div'); // to create a new folder
+                folder1.className = 'FolderWrap';
                 folder1.innerHTML = `<span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt=""></span> ${name}
                 <span onclick="viewFiles(${ffno})">
                     <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt="">
                 </span>
-                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder${ffno}">
+                <div class="NewFile_forFolder" style="float: right;">
+                        <img src="/static/new_file.png" alt="" title="New File" onclick="askForName('file',${ffno})">
+                    </div>
+                <ul id="folder${ffno}">
                 </ul>`;
                 document.getElementsByClassName("sideNav")[0].appendChild(folder1);
-                folderNo++;
                 folder = false;
             }
 
             if(file){
-                console.log(isparent, parent);
-                if(isparent){
-                    console.log("---- Inside the parent appending condition ----");
+
+                if(isparent){ // if the file is a child of some folder
+
                     const file1 = document.createElement('li');
+                    file1.setAttribute('onclick',`fetchFile(${ffno})`);
                     file1.className = 'file';
-                    file1.innerHTML = `<span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span> ${name}`;
+                    file1.innerHTML = `<span><img src="/static/file.png" height="15px" alt=""></span> ${name}`;
                     document.getElementById('folder' + parent).appendChild(file1);
                     parent = 0;
+
                 }else{
-                    const file1 = document.createElement('p');
+
+                    const file1 = document.createElement('p'); // to create a new file
                     file1.className = 'file';
-                    file1.innerHTML = `<span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span> ${name}`;
+                    file1.setAttribute('onclick','fetchFile('+ffno+')');
+                    file1.setAttribute('id',ffno);
+                    file1.innerHTML = `<span><img src="/static/file.png" height="15px" alt=""></span> ${name}`;
                     document.getElementsByClassName("sideNav")[0].appendChild(file1);
+
                 }
+
                 file = false;
+                isparent = false;
             }
             
-            document.getElementsByClassName("ffName")[0].style.display = 'none';
+            closeoverlay(); // to close the modal
+
         }
+
+        // Function to fetch the file
 
         const  askUpload = () => {
             document.getElementById("inputtingFile").click();
             document.getElementById("uploadbutton").style.display = 'block';
         }
+    
+
+    </script>
 
 
+    <script>
+
+        // Function to fetch file from backend
+
+        const fetchFile = (id) => {
+            fileEditing[1] = id;
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/fetchFile');
+            xhr.setRequestHeader('X-CSRFToken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+            xhr.send(JSON.stringify({id: id}));
+            xhr.onload = () => {
+
+                const file = JSON.parse(xhr.responseText);
+                editor.setValue(file['content'].replaceAll('\\n','\n'));
+                fileEditing[0] = file['name'];
+                document.getElementsByClassName('currentFile')[0].innerHTML = file['name'];
+                let extension = file['name'].split('.')[1];
+                editor.session.setMode(syntexHighlighter[extension.toLowerCase()]);
+
+            }
+        }
+
+        // Function to save and execute the file
+        const submitCode = () => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/submitCode');
+            xhr.setRequestHeader('X-CSRFToken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+            xhr.send(JSON.stringify({content: editor.getValue(),name: fileEditing[0],id: fileEditing[1]}));
+
+            xhr.onload = () => {
+                console.log(xhr.responseText);
+            }
+        }
     </script>
 </body>
 </html>

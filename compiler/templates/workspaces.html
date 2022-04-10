@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/workspace.css">
+    <title>Workspaces</title>
+</head>
+<body>
+    <nav>
+        <div class="logo">Compiler</div>
+        <div class="user">
+            Naman Singh
+            <img src="/static/icons/icons8-user-60.png" alt="">
+        </div>
+    </nav>
+    <overlay>
+        <div class="close" onclick="closeoverlay()"></div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" placeholder="Name of workspace" name="workspace_name">
+            <button type="submit">Create</button>
+        </form>
+    </overlay>
+    <section id="workspaces">
+        <div class="workspace" style="padding: 0;" onclick="MakeWorkspace()">
+            <img src="/static/icons/icons8-plus-64.png" alt="">
+        </div>
+        {% for workspace in workspaces %}
+        
+        <a href="/workspace/{{ workspace.id }}">
+        <div class="workspace">
+            <h2>{{ workspace.name }}</h2>
+            <div>
+                <p>Created At: <span>{{ workspace.created_at|date:'Y-m-d H:i' }}</span></p>
+                <p>Last Edit: <span>{{ workspace.updated_at|date:'Y-m-d H:i' }}</span></p>
+            </div>
+
+            <p>No of granted access: <span>{{ workspace.permissions|length }}</span></p>
+            <img src="/static/icons/icons8-advance-50.png" alt="">
+        </div>
+    </a>
+        {% endfor %}
+
+    </section>
+
+    <script src="/static/js/workspace.js"></script>
+</body>
+</html>

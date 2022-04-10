@@ -22,6 +22,11 @@ body{
     height: 100vh;
     width:20vw;
     background-color: #0F044C;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.sideNav::-webkit-scrollbar{
+    display: none;
 }
 
 .wrap1{
@@ -51,12 +56,16 @@ body{
 .terminal{
     height:30vh;
     width: 80vw;
-    background-color: #FA58B6;
+    background-color: #242a39;
     box-sizing: border-box;
     padding: 30px;
 }
 .file{
     cursor: pointer;
+}
+.file > span{
+    float: left;
+    margin-right: 5px;
 }
 .file:hover{
     color: #79c76a;
@@ -138,6 +147,8 @@ body{
     float: right;
 }
 .compilerControls{
+    padding-right: 60px;
+    width: 500px;
     margin-top: 4px;
     margin-left: 275px;
     height: 33px;
@@ -150,6 +161,7 @@ body{
 }
 .play{
     cursor: pointer;
+    display: flex;
     margin-left: 10px;
     background-color: rgb(105, 159, 226);
     padding: 4px;
@@ -169,7 +181,7 @@ body{
     color: #201332;
 }
 
-.ffName{
+.File_Folder_Modal{
     height: 120px;
     width: 250px;
     background-color: rgba(25, 105, 142, 0.955);
@@ -183,7 +195,7 @@ body{
     justify-content: space-evenly;
 }
 
-.ffName > input{
+.File_Folder_Modal > input{
     border-radius: 5px;
     height: 20px;
     background-color: #eddbe5c9;
@@ -192,7 +204,7 @@ body{
     padding-left: 10px;
 }
 
-.ffName>button{
+.File_Folder_Modal>button{
     background-color: blueviolet;
     padding: 5px;
     border-radius: 5px;
@@ -215,4 +227,38 @@ body{
 .sideNav>p{
     margin-left: 11px;
     margin-top: 8px;
+}
+
+#uploadbutton{
+    display: none; 
+    padding: 0 5px 0 5px;
+    margin-left: 8px; 
+    font-size: 13px; 
+    border-radius: 5px;
+}
+
+
+#inputtingFile{
+    display: none;
+}
+
+.FolderWrap{
+    background-color: rgba(35, 195, 190, 0.356); 
+    width: 200px;
+    padding: 10px; 
+    border-radius: 5px; 
+    margin-top: 5px;
+}
+
+.FolderWrap>ul{
+    margin-left: 40px; 
+    margin-top: 10px; 
+    list-style: none; 
+    font-size: 14px; 
+    display: none;
+}
+
+.ExploreMore{
+    float: left; 
+    margin-right: 4px;
 }

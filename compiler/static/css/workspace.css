@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #EFFFFD;
+}
+
+nav{
+    position: absolute;
+    top:0;
+    width: 100vw;
+    background-color: #B8FFF9;
+    height: 50px;
+}
+
+body{
+    overflow: hidden;
+}
+
+#workspaces{
+    padding-top: 100px;
+    height:100vh;
+    width: 100vw;
+    display: flex;
+    box-sizing: border-box;
+    gap: 50px;
+    flex-wrap: wrap;
+    padding-left: 70px;
+    overflow: auto;
+    padding-bottom: 100px;
+}
+
+#workspaces::-webkit-scrollbar{
+    display: none;
+}
+
+.workspace:nth-child(1){
+    /* padding: 0; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.workspace:nth-child(1)>img{
+    height: 60px;
+}
+.workspace{
+    box-sizing: border-box;
+    padding: 40px 0 0 0;
+    height: 200px;
+    width: 200px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content:flex-start;
+    background: linear-gradient(145deg, #d7e6e4, #ffffff);
+    font-family: 'Noto Serif';
+    font-size: 14px;
+    box-shadow:  20px 20px 60px #cbd9d7,
+                 -20px -20px 60px #ffffff;
+}
+
+.workspace>h2{
+    color : #3A3845;
+    text-shadow:  0 15px 20px #B8FFF9;
+    height: 50px;
+}
+
+.workspace>div>p>span{
+    color: #3A3845;
+    font-size: 13px;
+    font-family: 'Noto Serif';
+    margin-left: 5px;
+}
+
+.workspace>div>p{
+    color: #3A3845;
+    font-size: 13px;
+    font-family: 'Noto Serif';
+    margin-left: 5px;
+}
+.workspace>div{
+    margin-bottom: 10px;
+}
+.workspace>p{
+    color: #3A3845;
+    font-size: 13px;
+    font-family: 'Noto Serif';
+    margin-left: 5px;
+}
+
+.workspace>p>span{
+    color: #3A3845;
+    font-size: 14px;
+    font-family: 'Noto Serif';
+    margin-left: 5px;
+    height: 20px;
+}
+.workspace>div>p:nth-child(2){
+    margin-top: 3px;
+}
+.workspace>img{
+    margin-top: 8px;
+    height: 30px;
+}
+.workspace:hover{
+    cursor: pointer;
+    box-shadow:  20px 20px 60px #cbd9d7
+}
+
+a{
+    text-decoration: none;
+}
+
+overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0vw;
+    height: 0vh;
+    background-color: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    border-bottom-right-radius: 50%;
+    animation: flow 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+    display: none;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes flow {
+    from{
+        width: 0vw;
+        width: 0vw;}
+    to{
+        height: 100vh;
+        width: 100vw;
+        border-bottom-right-radius: 0px;
+    }
+}
+
+overlay>form>input{
+    width: 60vw;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    padding: 0 0 0 10px;
+}
+
+overlay>form>input:focus{
+    outline: 2px solid rgb(43, 108, 154);
+}
+form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+button{
+    margin-top: 30px;
+    padding: 6px 30px 6px 30px;
+    background-color: #7681e6;
+    border-radius: 12px;
+    border: none;
+    font-family: "Noto Serif";
+    color: white;
+    font-weight: 700;
+}
+
+.close{
+
+    position: absolute;
+    top: 80px;
+    right: 80px;
+    width: 30px;
+    height: 30px;
+    background-color: #7681e6;
+    border-radius: 50%;
+    border: none;
+}
+
+.close:hover{
+    cursor: pointer;
+    box-shadow: 0 0 10px #7681e6;
+}
+
+.user{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    float: right;
+    margin-right: 30px;
+    margin-top: 5px;
+    /* background-color: yellow; */
+}
+.user>img{
+    float: right;
+    width: 40px;
+    height: 40px;
+}
+
+.logo{
+    float: left;
+    font-family: "Noto Serif";
+    font-weight: 700;
+    font-size: 20px;
+    color: #3A3845;
+    margin-left: 30px;
+    margin-top: 10px;
+
+}
