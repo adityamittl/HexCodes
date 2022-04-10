@@ -138,7 +138,6 @@ body{
     float: right;
 }
 .compilerControls{
-    width: 300px;
     margin-top: 4px;
     margin-left: 275px;
     height: 33px;
@@ -161,7 +160,7 @@ body{
     float: left;
     margin-right: 5px;
     filter: hue-rotate(180deg);
-    filter: brightness(0.7);
+    /* filter: brightness(0.7); */
 }
 
 .currentFile{

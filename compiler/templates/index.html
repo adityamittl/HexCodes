@@ -28,9 +28,17 @@
             </div>
         </div>
 
-        <div class="compilerControls">
-            <div class="play"><img src="/static/run.png" alt=""> Run</div>
-            <div class="currentFile">myfile.py</div>
+        <div class="compilerControls" style="padding-right: 60px; width: 500px;">
+            <div class="currentFile" style="margin-left: 20px;">myfile.py</div>
+            <div class="play" style="display: flex; margin-left: 50px;"><img src="/static/run.png" alt="">Record</div>
+            <div class="play" style="display: flex;"><img src="/static/upload.png" height="18px" alt="" onclick="askUpload()">
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" style="display: none;" id="inputtingFile">
+                    <button id="uploadbutton" style=" display: none; padding-left: 5px; padding-right: 5px; margin-left: 8px; font-size: 13px; border-radius: 5px;">Upload</button>
+                </form>
+            </div>
+            <div class="play" style="margin-left: 20px; display: flex;"><img src="/static/record.png" height="18px" alt=""> Run</div>
         </div>
     </div>
     <div class="wrap1">
@@ -45,24 +53,27 @@
             <div class="ffName">
                 <div class="close" onclick="closeoverlay()"></div>
                 <input type="text" id="nameee">
-                <button onclick="create()">Create</button>
+                <button onclick="creatingFolder()">Create</button>
             </div>
-            <div style="background-color: rgba(35, 195, 190, 0.356); width: 200px; padding: 10px; border-radius: 5px;"><span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt=""></span> 
-                python
+            {% for i in folders %}
+            <div style="background-color: rgba(35, 195, 190, 0.356); width: 200px; padding: 10px; border-radius: 5px; margin-top: 5px;"><span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt=""></span> 
+                {{i.name}}
                 <span>
-                    <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt=""  onclick="viewFiles(1)">
+                    <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt=""  onclick="viewFiles({{i.id}})">
                     <div class="newFF" style="float: right;">
-                        <img height="20[x" src="/static/new-folder.png" alt="" title="New Folder" onclick="askForName('folder',1)">
-                        <img src="/static/new_file.png" alt="" title="New File" onclick="askForName('file',1)">
+                        <!-- <img height="20[x" src="/static/new-folder.png" alt="" title="New Folder" onclick="askForName('folder',1)"> -->
+                        <img src="/static/new_file.png" alt="" title="New File" onclick="askForName('file',{{i.id}})">
                     </div>
                 </span>
-                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder1">
-                    <li class="file"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>
-                        myfile.cpp
+                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 14px; display: none;"  id="folder{{i.id}}">
+                    {% for j in i.files.all %}
+                    <li class="file"><span style="float: left; margin-right: 5px;" id="{{j.id}}"><img src="/static/file.png" height="15px" alt=""></span>
+                        {{j.name}}
                     </li>
+                    {% endfor %}
                 </ul>
             </div>
-            <div style="background-color: rgba(35, 195, 190, 0.356); width: 200px; padding: 10px; border-radius: 5px; margin-top: 5px;"><span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt="" id="fid1"></span> 
+            <!-- <div style="background-color: rgba(35, 195, 190, 0.356); width: 200px; padding: 10px; border-radius: 5px; margin-top: 5px;"><span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt="" id="fid1"></span> 
                 C++
                 <span onclick="viewFiles(2)">
                     <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt="">
@@ -70,8 +81,11 @@
                 <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder2">
                     <li class="file"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>myfile.py</li>
                 </ul>
-            </div>
-            <p class="file"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>fdg</p>
+            </div> -->
+            {% endfor %}
+            {% for i in files %}
+            <p class="file" id="{{i.id}}"><span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>{{i.name}}</p>
+            {% endfor %}
         </div> 
         
         <!--Workspace, manages files Ends-->
@@ -86,8 +100,26 @@
     <script>
         folder = false;
         file = false;
-        let fileEditing = "xyz";
+        let fileEditing = ["xyz",0];
         let parent = 0;
+        isparent = false;
+        let folderNo = 4;
+        let workspace = 1;
+        // Ajax code for functioning 
+        
+        async function createFolder(name,url){
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/'+url);
+            xhr.setRequestHeader('X-CSRFToken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+            xhr.send(JSON.stringify({name: name, workspace: workspace}));
+            xhr.onload = () => {
+                const FID = JSON.parse(xhr.responseText)['id'];
+                console.log(FID);
+                create(FID,name);
+            }
+        }
+
+        // AJAX codes Enc
         const viewFiles = (fNo) => {
             const folder1 = document.getElementById('folder' + fNo);
             if(folder1.style.display === 'none'){
@@ -98,9 +130,14 @@
         }
         const closeoverlay = () => {
             document.getElementsByClassName("ffName")[0].style.display = 'none';
+            file = 0;
+            folder = 0;
         }
-        const askForName = (types,id) => {
+        const askForName = (types,id=0) => {
             parent = id;
+            if(id!=0){
+                isparent = true;
+            }
             if(types === 'folder'){
                 folder = true;
                 file = false;
@@ -110,11 +147,20 @@
             }
             document.getElementsByClassName("ffName")[0].style.display = 'flex';
         }  
-        
-        const create = () => {
+        function creatingFolder(){
             const name = document.getElementById('nameee').value;
+            if (folder) {
+                createFolder(name,'createFolder');
+            }
+            if (file) {
+                createFolder(name,'createFile');
+                console.log(fileNo);
+            }
+            
+        }
+        const create = (ffno,name) => {
+            console.log("---");
             document.getElementById('nameee').value = "";
-            let folderNo = 4;
             if(folder){
                 const folder1 = document.createElement('div');
                 folder1.style.backgroundColor = 'rgba(35, 195, 190, 0.356)';
@@ -123,10 +169,10 @@
                 folder1.style.borderRadius = '5px';
                 folder1.style.marginTop = '5px';
                 folder1.innerHTML = `<span><img height="20px" style="float: left; margin-right: 4px;" src="/static/folder2.png" alt=""></span> ${name}
-                <span onclick="viewFiles(${folderNo})">
+                <span onclick="viewFiles(${ffno})">
                     <img height="14px" style="margin-left: 4px;" src="/static/arrow.png" alt="">
                 </span>
-                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder${folderNo}">
+                <ul style="margin-left: 40px; margin-top: 10px; list-style: none; font-size: 13px; display: none;"  id="folder${ffno}">
                 </ul>`;
                 document.getElementsByClassName("sideNav")[0].appendChild(folder1);
                 folderNo++;
@@ -134,15 +180,32 @@
             }
 
             if(file){
-                const file1 = document.createElement('p');
-                file1.className = 'file';
-                file1.innerHTML = `<span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span>${name}`;
-                document.getElementsByClassName("sideNav")[0].appendChild(file1);
+                console.log(isparent, parent);
+                if(isparent){
+                    console.log("---- Inside the parent appending condition ----");
+                    const file1 = document.createElement('li');
+                    file1.className = 'file';
+                    file1.innerHTML = `<span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span> ${name}`;
+                    document.getElementById('folder' + parent).appendChild(file1);
+                    parent = 0;
+                }else{
+                    const file1 = document.createElement('p');
+                    file1.className = 'file';
+                    file1.innerHTML = `<span style="float: left; margin-right: 5px;"><img src="/static/file.png" height="15px" alt=""></span> ${name}`;
+                    document.getElementsByClassName("sideNav")[0].appendChild(file1);
+                }
                 file = false;
             }
             
             document.getElementsByClassName("ffName")[0].style.display = 'none';
         }
+
+        const  askUpload = () => {
+            document.getElementById("inputtingFile").click();
+            document.getElementById("uploadbutton").style.display = 'block';
+        }
+
+
     </script>
 </body>
 </html>
