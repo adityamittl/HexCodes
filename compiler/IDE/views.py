@@ -37,6 +37,7 @@ languages = {"c": "c", "cpp": "cpp", "java": "java", "py": "python", "js": "java
 
 # Compiling function
 def compile(code,lang):
+    print(lang)
     if lang == 'python':
         file = open('code.py','w')
         file.write(code)
@@ -83,8 +84,8 @@ def compile(code,lang):
         result = output.stdout
     else:
         exit_code = 0
-        error = ''
-        result = ''
+        error = ''.encode()
+        result = ''.encode()
     data = {
         'code' : code,
         'exit_code': str(exit_code),
@@ -187,7 +188,8 @@ def submitCode(request):
         file.description = code
         file.save()
         code = file.description
-        result = compile(code,file.filt_type)
+        print(file.filt_type,"----")
+        result = compile(code,languages[file.name.split('.')[1].lower()])
         print(result)
         return JsonResponse({"output": result})
     
