@@ -88,13 +88,14 @@ body{
     display: none;
     margin-left: -40px;
     margin-top: 40px;
-    height: 100px;
+    height: 50px;
     position: relative;
     background-color: rgba(66, 146, 193, 0.872);
     width: 100px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
     justify-content: center;
+    z-index: 10;
 }
 .user:hover .dropdown1 {
     display: flex;
@@ -115,11 +116,10 @@ body{
 
 .share{
     float: right;
-    margin-right: 100px;
+    margin-right: 50px;
     margin-top: 3px;
     height: 40px;
     width: 40px;
-    border-radius: 50%;
     background: url("/static/add_user.png");
     background-size: cover;
 }
@@ -128,13 +128,15 @@ body{
 }
 .dropdown2{
     display: none;
+    position: absolute;
     background-color: rgb(41, 143, 177);
-    margin-top: 40px;
     width: 100px;
     margin-left: -20px;
     padding: 5px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
+    z-index: 10;
+    margin-top: 30px;
 }
 .dropdown2>ul{
     list-style: none;
@@ -153,9 +155,6 @@ body{
     margin-top: 4px;
     margin-left: 275px;
     height: 33px;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(95, 144, 234, 0.75);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -179,7 +178,8 @@ body{
 .currentFile{
     margin-left: 60px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #201332;
+    color: #9fd572;
+    margin-left: 20px;
 }
 
 .File_Folder_Modal{
@@ -206,11 +206,12 @@ body{
 }
 
 .File_Folder_Modal>button{
-    background-color: blueviolet;
-    padding: 5px;
-    border-radius: 5px;
+    padding: 6px 30px 6px 30px;
+    background-color: #7681e6;
+    border-radius: 12px;
     border: none;
-    outline: 1px solid blue;
+    color: white;
+    font-weight: 700;
 }
 .close{
     float: right;
@@ -218,8 +219,8 @@ body{
     width: 15px;
     background-color: yellow;
     position: absolute;
-    margin-top: -100px;
-    margin-right: -220px;
+    margin-top: -80px;
+    margin-right: -200px;
     border-radius: 50%;
     background:url("/static/close.png");
     background-size: cover;
@@ -262,4 +263,73 @@ body{
 .ExploreMore{
     float: left; 
     margin-right: 4px;
+}
+.primary_button{
+    padding: 8px;
+    border: none;
+    background-color: rgb(50, 50, 232);
+    color: white;
+    font-size: 12px;
+    border-radius: 10px;
+}
+
+overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0vw;
+    height: 0vh;
+    background-color: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    border-bottom-right-radius: 50%;
+    animation: flow 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+    display: none;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    z-index: 33;
+}
+
+@keyframes flow {
+    from{
+        width: 0vw;
+        width: 0vw;}
+    to{
+        height: 100vh;
+        width: 100vw;
+        border-bottom-right-radius: 0px;
+    }
+}
+
+overlay>input{
+    width: 60vw;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    padding: 0 0 0 10px;
+}
+
+overlay>form>input:focus{
+    outline: 2px solid rgb(43, 108, 154);
+}
+
+.closeN{
+
+    position: absolute;
+    top: 80px;
+    right: 80px;
+    width: 30px;
+    height: 30px;
+    background-color: #7681e6;
+    border-radius: 50%;
+    border: none;
+}
+
+.closeN:hover{
+    cursor: pointer;
+    box-shadow: 0 0 10px #7681e6;
 }

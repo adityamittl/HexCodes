@@ -34,3 +34,6 @@ class Folder(models.Model):
     def __str__(self):
         return self.name
 
+class SharedWithMe(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    workspace = models.ManyToManyField(workspace)

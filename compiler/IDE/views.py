@@ -3,9 +3,11 @@ import os
 import json
 from django.shortcuts import redirect, render 
 from django.http import  HttpResponse, JsonResponse,HttpResponse
-from fileManage.models import Folder,File,workspace
+from fileManage.models import Folder,File,workspace,SharedWithMe
 from django.utils import timezone
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .ocr import ocr_core
 
 
@@ -13,10 +15,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 dir = str(os.getcwd()).replace('\\','/')
 print(dir)
 
-# Code for workspace Encryption
+
+# Code for Encryption and Decryption
+
 from cryptography.fernet import Fernet
 key = Fernet.generate_key()
 f = Fernet(key)
+
 def encrypt(message):
     message = message.encode()
     cipher_text = f.encrypt(message).decode('utf-8')
@@ -26,6 +31,7 @@ def decrypt(message):
     message = message.encode()
     decrypted_message = f.decrypt(message)
     return decrypted_message
+
 
 languages = {"c": "c", "cpp": "cpp", "java": "java", "py": "python", "js": "javascript"}
 
@@ -88,7 +94,7 @@ def compile(code,lang):
     return data
 
 
-
+@login_required
 def home(request,id):
     if request.method == 'POST':
         codeFile = request.FILES['code']
@@ -118,7 +124,7 @@ def home(request,id):
     return HttpResponse('You are not authorized to view this workspace')
 
 
-
+@login_required
 def newFolder(request):
     if request.method == 'POST':
         fetched_data = request.body.decode('utf-8')
@@ -132,7 +138,7 @@ def newFolder(request):
         print(folder.id)
         return JsonResponse({'id':folder.id})
 
-
+@login_required
 def newFile(request):
     if request.method == 'POST':
         fileName = request.body.decode('utf-8')
@@ -157,24 +163,8 @@ def newFile(request):
         folder.save()
         return JsonResponse({'id':file.id})
 
-def theme_dracula(request):
-    return redirect('/static/language_library/theme-dracula.js')
 
-def mode_javascript(request):
-    return redirect('/static/language_library/mode-javascript.js')
-
-def mode_python(request):
-    return redirect('/static/language_library/mode-python.js')
-
-def theme_chaos(request):
-    return redirect('/static/language_library/theme-chaos.js')
-
-def mode_java(request):
-    return redirect('/static/language_library/mode-java.js')
-
-
-def mode_c_cpp(request):
-    return redirect('/static/language_library/mode-c_cpp.js')
+@login_required
 def fetchFile(request):
     if request.method == 'POST':
         fileId = request.body.decode('utf-8')
@@ -184,6 +174,9 @@ def fetchFile(request):
         print(file.description)
         return JsonResponse({'content':file.description,'name':file.name})
 
+
+# Ajax Code Runs Here
+@login_required
 def submitCode(request):
     if request.method == 'POST':
         code = request.body.decode('utf-8')
@@ -199,9 +192,8 @@ def submitCode(request):
         return JsonResponse({"output": result})
     
 
-        
-
-
+# Function to add new workspace for a user
+@login_required
 def workspaces(request):
 
     if request.method == 'POST':
@@ -211,7 +203,57 @@ def workspaces(request):
 
 
     workspaces = workspace.objects.filter(owner=request.user)
+    try:
+        shared_workspaces = SharedWithMe.objects.get(user=request.user).workspaces.all()
+    except:
+        shared_workspaces = []
     for ws in workspaces:
         ws.id = encrypt(str(ws.id))
 
-    return render(request,'workspaces.html',{'workspaces':workspaces})
+    return render(request,'workspaces.html',{'workspaces':workspaces,'shared_workspaces':shared_workspaces})
+
+
+# Function to grant permission to another User
+@login_required
+def addNewGrant(request):
+    if request.method == 'POST':
+        data = request.body.decode('utf-8')
+        data = json.loads(data)
+        workspace_id = decrypt(data['workspace'])
+        ws = workspace.objects.get(id=workspace_id)
+        ws.updated_at = timezone.now()
+        grantee = data['grantee']
+        grantee_user = User.objects.get(username=grantee)
+        ws.permissions.add(grantee_user)
+        try:
+            permission_table = SharedWithMe.objects.get(user=grantee_user)
+            permission_table.workspaces.add(ws)
+            permission_table.save()
+        except:
+            permission_table = SharedWithMe.objects.create(user=grantee_user)
+            permission_table.workspaces.add(ws)
+            permission_table.save()
+        ws.save()
+        return JsonResponse({'success':'true'})
+
+@login_required
+def Workspace_redirect(request):
+    return redirect('/workspace')
+
+# Functions of IDE static route redirects
+def theme_dracula(request):
+    return redirect('/static/language_library/theme-dracula.js')
+
+def mode_javascript(request):
+    return redirect('/static/language_library/mode-javascript.js')
+
+def mode_python(request):
+    return redirect('/static/language_library/mode-python.js')
+
+def theme_chaos(request):
+    return redirect('/static/language_library/theme-chaos.js')
+
+def mode_java(request):
+    return redirect('/static/language_library/mode-java.js')
+def mode_c_cpp(request):
+    return redirect('/static/language_library/mode-c_cpp.js')

@@ -202,7 +202,7 @@ button{
     margin-top: 5px;
     /* background-color: yellow; */
 }
-.user>img{
+.user>a>img{
     float: right;
     width: 40px;
     height: 40px;

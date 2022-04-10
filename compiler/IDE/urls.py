@@ -10,7 +10,7 @@ urlpatterns = [
     path('workspace/theme-chaos.js', theme_chaos),
     path('workspace/mode-c_cpp.js', mode_c_cpp),
 
-    # path('', home),
+    path('', Workspace_redirect),
 
     # Ajax call urls
     path('createFolder', newFolder),

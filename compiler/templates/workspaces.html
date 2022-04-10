@@ -12,7 +12,9 @@
         <div class="logo">Compiler</div>
         <div class="user">
             {{ user.username }}
-            <img src="/static/icons/icons8-user-60.png" alt="">
+            <a href="/signout">
+                <img src="/static/icons/icons8-user-60.png" alt="">
+            </a>
         </div>
     </nav>
     <overlay>
@@ -25,12 +27,30 @@
     </overlay>
     <section id="workspaces">
         <div class="workspace" style="padding: 0;" onclick="MakeWorkspace()">
+            
             <img src="/static/icons/icons8-plus-64.png" alt="">
         </div>
         {% for workspace in workspaces %}
         
         <a href="/workspace/{{ workspace.id }}">
         <div class="workspace">
+            <h2>{{ workspace.name }}</h2>
+            <div>
+                <p>Created At: <span>{{ workspace.created_at|date:'Y-m-d H:i' }}</span></p>
+                <p>Last Edit: <span>{{ workspace.updated_at|date:'Y-m-d H:i' }}</span></p>
+            </div>
+
+            <p>No of granted access: <span>{{ workspace.permissions|length }}</span></p>
+            <img src="/static/icons/icons8-advance-50.png" alt="">
+        </div>
+    </a>
+        {% endfor %}
+
+        {% for workspace in shared_workspaces %}
+        
+        <a href="/workspace/{{ workspace.id }}">
+        <div class="workspace">
+            <p style="font-size:10px"> Shared</p>
             <h2>{{ workspace.name }}</h2>
             <div>
                 <p>Created At: <span>{{ workspace.created_at|date:'Y-m-d H:i' }}</span></p>
