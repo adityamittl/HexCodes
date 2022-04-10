@@ -50,7 +50,7 @@
   python manage.py makemigrations
   python manage.py migrate
   python manage.py runserver
-```
+  ```
 
 ## What we have learned
 - Mentoring session with Kundan Nigan was awesome
@@ -73,3 +73,14 @@ Since we had a time constraint, we can't make this a complete but those are the 
 ## Use of vmware in this project
 - vmware helps in debugging of applications in multiple environments, without changing development machines.
 - It also allows us to rigorously test programs in different runtime environments before release to production.
+
+![image](https://user-images.githubusercontent.com/76921082/162639983-dd0343e0-93e4-4643-9757-61b9f57736c7.png)
+
+![image](https://user-images.githubusercontent.com/76921082/162639995-3851e942-b4c6-4cea-9bd8-ac8261fd6d13.png)
+
+![image](https://user-images.githubusercontent.com/76921082/162640002-e8964760-0775-4db2-ae4d-1d5cfde426b4.png)
+
+![image](https://user-images.githubusercontent.com/76921082/162640018-db7bc91a-c272-4c3a-8210-0a9ae1506992.png)
+
+![image](https://user-images.githubusercontent.com/76921082/162640036-b64c445a-5f78-453b-8423-62dae6648f8b.png)
+
