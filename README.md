@@ -1,5 +1,7 @@
 # TeamElite
 
+- Pitch: https://drive.google.com/drive/folders/12SlisaZ3TeKZ6ulBYdiEx_mMmZYXnVeg?usp=sharing
+
 ## 💡 Inspiration
 
 - make a Web Based IDE that empower user to collaborate with others their workspace 
